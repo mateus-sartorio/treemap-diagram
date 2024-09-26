@@ -1,0 +1,65 @@
+body {
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+}
+
+main {
+  margin: auto auto;
+}
+
+h1 {
+  font-size: 25px;
+  font-weight: 600;
+  font-family: sans-serif;
+  text-align: center;
+  margin: 20px 0 0 0;
+}
+
+h2 {
+  font-size: 19px;
+  font-weight: 400;
+  font-family: sans-serif;
+  text-align: center;
+  margin: 10px 0 50px 0;
+}
+
+#container {
+  margin: auto auto;
+  width: fit-content;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+#legend {
+  position: absolute;
+  right: 80px;
+  top: 0;
+  margin: 0;
+}
+
+#source {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+}
+
+#source a {
+  font-weight: 400;
+  font-family: sans-serif;
+  text-decoration: none;
+}
+
+#tooltip {
+	position: absolute;
+	padding: 10px;
+	font: 12px Arial;
+	background: rgba(255, 255, 204, 0.9);
+	box-shadow: 1px 1px 10px rgba(128, 128, 128, 0.6);
+	border: 0px;
+	border-radius: 4px;
+	pointer-events: none;
+  opacity: 0.8;
+}
