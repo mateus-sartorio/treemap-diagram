@@ -173,4 +173,4 @@ async function init(url, title, description) {
   plotGraph(data);
 }
 
-init(videoGamesSalesUrl, title, description);
+init(videoGamesSalesUrl, videoGamesTitle, videoGamesDescription);
