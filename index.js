@@ -157,7 +157,7 @@ function plotGraph(data) {
     .append("text")
     .text((d) => d)
     .attr("x", legendScale.bandwidth() + legendFontSize / 2)
-    .attr("y", (_d, i) => legendScale(i) + legendFontSize)
+    .attr("y", (_d, i) => legendScale(i) + legendScale.bandwidth() - 2*legendGap - legendFontSize / 2)
     .style("font-family", "sans-serif")
     .style("font-size", `${legendFontSize}px`);
 }
