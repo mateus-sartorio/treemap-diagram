@@ -2,18 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Choropleth map</title>
+  <title>Treemap Diagram</title>
   <link rel="stylesheet" href="./index.css">
 </head>
 <body>
   <main>
-    <h1 id="title">United States Educational Attainment</h1>
-    <h2 id="description">Percentage of adults age 25 and older with a bachelor's degree or higher (2010-2014)</h2>
+    <ul id="source">
+      <li>
+        <a href="https://treemap-diagram.freecodecamp.rocks/?data=videogames" target="_blank">Video Game Data Set</a> |
+      </li>
+      <li>
+        <li>
+          <a href="https://treemap-diagram.freecodecamp.rocks/?data=movies" target="_blank">Movies Data Set</a> |
+        </li>
+      </li>
+        <a href="https://treemap-diagram.freecodecamp.rocks/?data=kickstarter" target="_blank">Kickstarter Data Set</a>
+      </li>
+    </ul>
 
-    <div id="container">
-      <div id="legend"></div>
-      <div id="source">Source: <a href="https://www.ers.usda.gov/data-products/county-level-data-sets/download-data.aspx" target="_blank">USDA Economic Research Service</a></div>
-    </div>
+    <h1 id="title">Highest Grossing Movies</h1>    
+    <h2 id="description">Top 95 Highest Grossing Movies</h2>
+
+    <div id="container"></div>
+
+    <div id="legend"></div>
 
     <div id="tooltip"></div>
   </main>

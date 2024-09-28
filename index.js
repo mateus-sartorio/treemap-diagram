@@ -1,13 +1,13 @@
 "use strict	";
 
-const usEducationalDataUrl = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json";
-const usCountryDataUrl = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json";
+const movieSalesUrl =
+  "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json";
 
 const plotWidth = 960;
 const plotHeight = 600;
 const padding = 60;
 
-const barColor = "#607EAA"; 
+const barColor = "#607EAA";
 const barWidth = 100;
 const selectionColor = "#1C3879";
 
@@ -15,76 +15,71 @@ const legendWidth = 300;
 const legendHeight = 15;
 const legendPadding = 30;
 
-const colors = [
-  "#e5f5e0",
-  "#c7e9c0",
-  "#a1d99b",
-  "#74c476",
-  "#41ab5d",
-  "#238b45",
-  "#006d2c",
-];
+const colors = {
+  Action: "#4c92c3",
+  Drama: "#bed2ed",
+  Adventure: "#ff993e",
+  Family: "#ffc993",
+  Animation: "#ade5a1",
+  Comedy: "#56b356",
+  Biography: "#de5253",
+};
 
-function plotGraph(usEducationalData, usCountryData) {
-  const counties = topojson.feature(usCountryData, usCountryData.objects.counties).features;
-
+function plotGraph(movieSales) {
   const tooltip = d3.select("#tooltip");
 
-  const educationPercentageScale = d3
-    .scaleLinear()
-    .domain([d3.min(usEducationalData, d => d.bachelorsOrHigher), d3.max(usEducationalData, d => d.bachelorsOrHigher)])
-    .range([0, colors.length]);
-  
-  const legendScale1 = d3
-    .scaleBand()
-    .domain(colors.map((_c, i) => i))
-    .range([legendPadding, legendWidth - legendPadding]);
-
-  const legendScale2 = d3
-    .scaleLinear()
-    .domain([0, colors.length])
-    .range([legendPadding, legendWidth - legendPadding]);
-
-  const legendScale3 = d3
-    .scaleLinear()
-    .domain([0, colors.length])
-    .range([d3.min(usEducationalData, d => d.bachelorsOrHigher), d3.max(usEducationalData, d => d.bachelorsOrHigher)]);
-  
   const svg = d3
     .select("#container")
     .append("svg")
     .attr("width", plotWidth)
     .attr("height", plotHeight);
 
-  const path = d3.geoPath();
-  
-  svg
-    .selectAll("path")
-    .data(counties)
-    .enter()
-    .append("path")
-    .attr("d", path)
-    .attr("class", "county")
-    .style("stroke", "white")
-    .style("stroke-width", 0.5)
-    .style("fill", (d) => {
-      const data = usEducationalData.find(g => g.fips === d.id);
-      const percentage = data.bachelorsOrHigher;
-      return colors[Math.floor(educationPercentageScale(percentage))];
-    })
-    .attr("data-fips", d => d.id)
-    .attr("data-education", d => {
-      const data = usEducationalData.find(g => g.fips === d.id);
-      return data.bachelorsOrHigher;
+  let hierarchy = d3
+    .hierarchy(movieSales, (node) => node.children)
+    .sum((node) => node.value)
+    .sort((node1, node2) => node2.value - node1.value);
 
-    })
+  const createTreeMap = d3.treemap().size([plotWidth, plotHeight]);
+
+  createTreeMap(hierarchy);
+
+  const movieTiles = hierarchy.leaves();
+
+  const categories = Array.from(new Set(movieTiles.map(d => d.data.category)));
+
+  console.log(movieTiles)
+
+  const blockElements = svg
+    .selectAll("g")
+    .data(movieTiles)
+    .enter()
+    .append("g")
+    .attr("transform", d => `translate(${d.x0}, ${d.y0})`);
+
+  blockElements
+    .append("rect")
+    .attr("class", "tile")
+    .attr("fill", d => colors[d.data.category])
+    .attr("data-name", d => d.data.name)
+    .attr("data-category", d => d.data.category)
+    .attr("data-value", d => d.data.value)
+    .attr("width", d => d.x1 - d.x0)
+    .attr("height", d => d.y1 - d.y0);
+
+  blockElements
+    .append("text")
+    .text(d => d.data.name)
+    .attr("x", 5)
+    .attr("y", 20)
+
+  blockElements
     .on("mouseover", (event, d) => {
-      const { area_name, state, bachelorsOrHigher } = usEducationalData.find(g => g.fips === d.id);
+      const { name, category, value } = d.data;
 
       tooltip
-        .attr("data-education", bachelorsOrHigher)
+        .attr("data-value", value)
         .style("visibility", "visible")
-        .text(`${area_name} - ${state}: ${bachelorsOrHigher}%`)
+        .html(`${name}<br/>${category}<br/>${value}`)
         .style("font-family", "sans-serif")
         .style("font-size", "12px")
         .style("left", event.pageX + 20 + "px")
@@ -93,50 +88,40 @@ function plotGraph(usEducationalData, usCountryData) {
     .on("mouseout", (_event) => {
       tooltip.style("visibility", "hidden");
     });
- 
+
   const legend = d3
     .select("#legend")
     .append("svg")
     .attr("width", legendWidth)
     .attr("height", legendHeight + legendPadding);
 
-  legend
-    .selectAll("rect")
-    .data(colors)
+  const legendBlocks = legend
+    .selectAll("g")
+    .data(categories)
     .enter()
+    .append("g");
+
+  legendBlocks
     .append("rect")
-    .attr("x", (_d, i) => legendScale1(i))
+    .attr("class", "legend-item")
+    .attr("x", (_d, i) => i)
     .attr("y", 0)
-    .attr("width", legendScale1.bandwidth())
-    .attr("height", legendHeight)
-    .attr("fill", (d) => d);
+    .attr("width",10)
+    .attr("height", 10)
+    .attr("fill", (d) => colors[d])
 
-  const legendAxis = d3
-    .axisBottom(legendScale2)
-    .tickValues(d3.range(0, colors.length + 1))
-    .tickFormat((d) => `${Math.round(legendScale3(d))}%`);
-
-  legend
-    .append("g")
-    .attr("id", "legend-axis-axis")
-    .attr("transform", `translate(0, ${legendHeight})`)
-    .call(legendAxis);
-
-  legend
+  legendBlocks
     .append("text")
-    .attr("text-anchor", "middle")
-    .style("font-family", "sans-serif")
-    .style("font-size", "12px")
-};
+    .text(d => d)
+    .attr("x", 5)
+    .attr("y", 20)
+}
 
 async function init() {
-  const usEducationalResponse = await fetch(usEducationalDataUrl);
-  const usEducationalData = await usEducationalResponse.json();
+  const movieSalesResponse = await fetch(movieSalesUrl);
+  const movieSales = await movieSalesResponse.json();
 
-  const usCountryResponse = await fetch(usCountryDataUrl);
-  const usCountryData = await usCountryResponse.json();
-
-  plotGraph(usEducationalData, usCountryData);
+  plotGraph(movieSales);
 }
 
 init();
