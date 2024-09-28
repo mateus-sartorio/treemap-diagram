@@ -8,7 +8,12 @@
 <br>
 
 <div align="center">
-  <img src="./assets/demonstration.png" alt="Graph visualization"/>
+  <img src="./assets/demonstration1.png" alt="Graph visualization"/>
+</div>
+
+<div align="center">
+  <img src="./assets/demonstration2.png" alt="Graph visualization" width="47%"/>
+  <img src="./assets/demonstration3.png" alt="Graph visualization" width="47%"/>
 </div>
 
 <br>
