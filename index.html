@@ -7,31 +7,26 @@
 </head>
 <body>
   <main>
-    <ul id="source">
-      <li>
-        <a href="https://treemap-diagram.freecodecamp.rocks/?data=videogames" target="_blank">Video Game Data Set</a> |
-      </li>
-      <li>
-        <li>
-          <a href="https://treemap-diagram.freecodecamp.rocks/?data=movies" target="_blank">Movies Data Set</a> |
-        </li>
-      </li>
-        <a href="https://treemap-diagram.freecodecamp.rocks/?data=kickstarter" target="_blank">Kickstarter Data Set</a>
-      </li>
-    </ul>
+    <div id="source">
+      <span onclick="setSource('videogames')">Video Game Data Set</span> |
+      <span onclick="setSource('movies')">Movies Data Set</span> |
+      <span onclick="setSource('kickstarter')">Kickstarter Data Set</span>
+    </div>
 
-    <h1 id="title">Highest Grossing Movies</h1>    
-    <h2 id="description">Top 95 Highest Grossing Movies</h2>
+    <h1 id="title"></h1>    
+    <h2 id="description"></h2>
 
-    <div id="container"></div>
-
-    <div id="legend"></div>
+    <section>
+      <div id="container"></div>
+      <div id="legend"></div>
+    </section>
 
     <div id="tooltip"></div>
   </main>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/topojson@3"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.6.1/randomColor.min.js"></script>
   <script src="./index.js" defer></script>
   <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js" defer></script>
 </body>
